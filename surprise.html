@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Shreya ✨</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+  background-size: 400% 400%;
+  animation: bgAnim 12s infinite ease;
+  font-family: system-ui;
+  color: white;
+  overflow-x: hidden;
+}
+
+@keyframes bgAnim {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+/*** Floating emojis ***/
+.overlay{
+  position:fixed; inset:0; pointer-events:none; z-index:2;
+}
+
+.sticker{
+  position:absolute; font-size:2.4rem; opacity:0;
+  animation: floatUp 6s linear infinite;
+}
+
+@keyframes floatUp{
+  0%{transform:translateY(60px) scale(0.9); opacity:0;}
+  20%{opacity:1;}
+  85%{opacity:1;}
+  100%{transform:translateY(-130vh) scale(1.2); opacity:0;}
+}
+
+/*** Wrapper ***/
+.wrapper{
+  position:relative;
+  max-width:900px;
+  margin:40px auto;
+  border-radius:20px;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(18px);
+  padding-bottom:20px;
+  overflow:hidden;
+  box-shadow:0 18px 60px rgba(0,0,0,0.5);
+  animation:popSmooth 1s ease;
+}
+
+@keyframes popSmooth{
+  0%{opacity:0; transform:translateY(40px) scale(.96);}
+  100%{opacity:1; transform:translateY(0) scale(1);}
+}
+
+nav{
+  display:flex; justify-content:space-around;
+  border-bottom:1px solid rgba(255,255,255,0.3);
+  padding:12px;
+}
+
+nav button{
+  border:none; background:none; padding:9px 18px;
+  border-radius:20px; color:white; cursor:pointer; font-weight:600;
+}
+
+nav button.active{
+  background:rgba(255,255,255,0.25);
+}
+
+nav button:hover{
+  background:rgba(255,255,255,0.18);
+}
+
+.page{display:none; padding:22px;}
+.page.active{display:block; animation: fadePage .7s ease;}
+
+@keyframes fadePage{
+  0%{opacity:0; transform:translateY(15px);}
+  100%{opacity:1; transform:translateY(0);}
+}
+
+.heading{
+  font-size:26px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.normal-text{
+  font-size:16px;
+  opacity:0.95;
+  margin-bottom:14px;
+  line-height:1.5;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.card{
+  background:rgba(0,0,0,0.35);
+  padding:12px;
+  border-radius:12px;
+  transition:.4s;
+}
+
+.card:hover{
+  transform:scale(1.06) translateY(-8px);
+  background:rgba(0,0,0,0.55);
+}
+
+.quiz-block{margin-bottom:18px;}
+
+.opt{
+  display:block;
+  padding:8px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid transparent;
+  margin-bottom:6px;
+  transition:.35s;
+}
+
+.opt:hover{
+  transform:translateX(12px) scale(1.04);
+  border-color:white;
+  background:rgba(255,255,255,0.25);
+  box-shadow:0px 6px 25px rgba(255,255,255,0.5);
+}
+
+.opt input{margin-right:8px;}
+
+.btn-main{
+  padding:12px 22px;
+  background:white;
+  border-radius:30px;
+  border:none;
+  color:#ff3d9b;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+}
+.btn-main:hover{transform:scale(1.08);}
+
+#scoreBox{
+  margin-top:18px;
+  opacity:0;
+  transition:.4s;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.65);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.6s;
+  z-index:100;
+}
+.popup.active{opacity:1; pointer-events:auto;}
+
+.popup-card{
+  padding:20px;
+  width:260px;
+  background:white;
+  border-radius:14px;
+  color:#ff2e90;
+  text-align:center;
+  font-size:17px;
+  animation:pop .6s ease forwards;
+}
+
+@keyframes pop{
+  0%{transform:scale(.6);}
+  100%{transform:scale(1);}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- background music -->
+<audio id="bgMusic" loop autoplay>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_dd7e5f8f60.mp3?filename=romantic-piano-9843.mp3">
+</audio>
+
+<div class="overlay" id="emojiLayer"></div>
+
+<div class="popup" id="popupFinal">
+  <div class="popup-card">
+    🎉 You Finished 😌💗<br><br>
+    Thanks for answering everything 💞<br>
+    You're more important than you think 🌸<br><br>
+    <button onclick="closePopup()">Close</button>
+  </div>
+</div>
+
+<div class="wrapper">
+
+<nav>
+  <button class="active" data-page="home">Home</button>
+  <button data-page="memories">Memories</button>
+  <button data-page="reasons">Reasons</button>
+  <button data-page="quiz">Quiz</button>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="home">
+  <div class="heading">Hey Shreya 💖</div>
+  <div class="normal-text">
+This is something special I made for you 😌  
+Don't rush... just explore slowly 🌸
+  </div>
+</div>
+
+
+<!-- MEMORIES -->
+<div class="page" id="memories">
+  <div class="heading">How it Slowly Changed ✨</div>
+  <div class="normal-text">
+From “I didn’t like you” → “okay I like this girl” 😂💗
+  </div>
+
+  <div class="grid">
+    <div class="card">At first I honestly didn’t like you.<br>Not your vibe, not your talks 😭</div>
+    <div class="card">Then slowly after college days,<br>you became less annoying 😌</div>
+    <div class="card">Sometimes still annoying,<br>but I don’t like when you stop talking 💀</div>
+    <div class="card">When I shout at you,<br>I still care secretly 😒</div>
+    <div class="card">You're actually strong,<br>even when you look innocent 🌸</div>
+    <div class="card">Final truth: everything will be okay,<br>just like we became okay slowly 💞</div>
+  </div>
+</div>
+
+
+<!-- REASONS -->
+<div class="page" id="reasons">
+  <div class="heading">Why You’re Different 😌</div>
+
+  <div class="card" style="margin-bottom:10px">I shout but never want you to feel sad.</div>
+  <div class="card" style="margin-bottom:10px">You handle things silently even when it hurts you.</div>
+  <div class="card" style="margin-bottom:10px">You are annoying but my favourite annoying girl 😭💕</div>
+</div>
+
+
+<!-- QUIZ -->
+<div class="page" id="quiz">
+  <div class="heading">Answer About Me 🎯</div>
+
+  <div class="normal-text">Don't lie 😭 just answer honestly</div>
+
+  <!-- Q1 -->
+  <div class="quiz-block">
+    <b>1. Favourite color?</b><br><br>
+    <label class="opt"><input type="radio" name="q1" value="blue">Blue</label>
+    <label class="opt"><input type="radio" name="q1" value="orange">Orange</label>
+    <label class="opt"><input type="radio" name="q1" value="black">Black</label>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-block">
+    <b>2. Favourite food?</b><br><br>
+    <label class="opt"><input type="radio" name="q2" value="pizza">Pizza</label>
+    <label class="opt"><input type="radio" name="q2" value="biryani">Biryani</label>
+    <label class="opt"><input type="radio" name="q2" value="noodles">Noodles</label>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-block">
+    <b>3. Favourite place?</b><br><br>
+    <label class="opt"><input type="radio" name="q3" value="paris">Paris</label>
+    <label class="opt"><input type="radio" name="q3" value="dubai">Dubai</label>
+    <label class="opt"><input type="radio" name="q3" value="newyork">New York City</label>
+  </div>
+
+  <!-- BLANKS -->
+  <div class="quiz-block"><b>4. Nickname?</b><br><input type="text" id="nick"></div>
+  <div class="quiz-block"><b>5. What do I often say?</b><br><input type="text" id="often"></div>
+  <div class="quiz-block"><b>6. What annoys me most?</b><br><input type="text" id="annoy"></div>
+  <div class="quiz-block"><b>7. What I like doing most?</b><br><input type="text" id="favact"></div>
+  <div class="quiz-block"><b>8. What I am proud of?</b><br><input type="text" id="proud"></div>
+  <div class="quiz-block"><b>9. My comfort thing?</b><br><input type="text" id="comfort"></div>
+  <div class="quiz-block"><b>10. When do I get angry?</b><br><input type="text" id="angry"></div>
+
+  <button class="btn-main" id="quizBtn">Submit</button>
+
+  <div id="scoreBox"></div>
+
+</div>
+
+</div>
+
+<script>
+
+// floating emojis
+const EM=["💖","💞","✨","💕","🌸","🦋"];
+setInterval(()=>{
+  let e=document.createElement("div");
+  e.className="sticker";
+  e.textContent=EM[Math.floor(Math.random()*EM.length)];
+  e.style.left=Math.random()*100+"vw";
+  e.style.bottom="-60px";
+  document.getElementById("emojiLayer").appendChild(e);
+  setTimeout(()=>e.remove(),6000);
+},600);
+
+// nav
+document.querySelectorAll("nav button").forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    document.getElementById(btn.dataset.page).classList.add("active");
+  }
+});
+
+// quiz
+document.getElementById("quizBtn").onclick=()=>{
+
+  let score=0;
+  let q1=document.querySelector('input[name="q1"]:checked');
+  let q2=document.querySelector('input[name="q2"]:checked');
+  let q3=document.querySelector('input[name="q3"]:checked');
+
+  if(q1 && q1.value==="orange") score++;
+  if(q2 && q2.value==="biryani") score++;
+  if(q3 && q3.value==="newyork") score++;
+
+  document.getElementById("scoreBox").style.opacity=1;
+  document.getElementById("scoreBox").innerHTML=`Score: ${score}/3`;
+
+  let nick=document.getElementById("nick").value.trim();
+  let often=document.getElementById("often").value.trim();
+  let annoy=document.getElementById("annoy").value.trim();
+  let favact=document.getElementById("favact").value.trim();
+  let proud=document.getElementById("proud").value.trim();
+  let comfort=document.getElementById("comfort").value.trim();
+  let angry=document.getElementById("angry").value.trim();
+
+  let fullMsg = 
+    `QUIZ ANSWERS FROM SHREYA 💗%0A%0A`+
+    `Score: ${score}/3 %0A%0A`+
+    `Nickname: ${nick || "(blank)"}%0A`+
+    `Often says: ${often || "(blank)"}%0A`+
+    `Annoys me: ${annoy || "(blank)"}%0A`+
+    `Likes doing: ${favact || "(blank)"}%0A`+
+    `Proud of: ${proud || "(blank)"}%0A%0A`+
+    `Comfort thing: ${comfort || "(blank)"}%0A`+
+    `Gets angry when: ${angry || "(blank)"}`;
+
+  let YOUR_NUMBER="916382610922";
+
+  setTimeout(()=>{
+    window.open(`https://wa.me/${YOUR_NUMBER}?text=${fullMsg}`, "_blank");
+  },800);
+
+  setTimeout(()=>document.getElementById("popupFinal").classList.add("active"),1200);
+};
+
+function closePopup(){
+  document.getElementById("popupFinal").classList.remove("active");
+}
+
+</script>
+
+</body>
+</html>
